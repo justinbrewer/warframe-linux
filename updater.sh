@@ -89,38 +89,15 @@ fi
 #############################################################
 if [ "$do_update" = true ] ; then
 	curl -A Mozilla/5.0 http://origin.warframe.com/index.txt.lzma | unlzma - > index.txt
+	sort -o index.txt index.txt
+	touch local_index.txt
 
 	echo "*********************"
 	echo "Checking for updates."
 	echo "*********************"
 
 	#create list of all files to download
-	rm -f updates.txt
-	touch updates.txt
-	while read -r line; do
-		# get the raw filename with md5sum and lzma extension
-		RAW_FILENAME=$(echo $line | awk -F, '{print $1}')
-		# path to local file currently tested
-		LOCAL_PATH="$EXEPREFIX${RAW_FILENAME:0:-38}"
-
-		#check if local_index.txt exists
-		if [ -f "local_index.txt" ]; then
-			#if local index exists, check if new entry is in it
-			if grep -q "$RAW_FILENAME" "local_index.txt"; then
-				#if it's in the list, check if the file exists already
-				if [ ! -f "$LOCAL_PATH" ]; then
-					# if file doesnt exist, add it to download list
-					echo "$line" >> updates.txt
-				fi
-			else
-				#if new md5sum isn't in local index list, add it to download list
-				echo "$line" >> updates.txt
-			fi
-		else
-			#if no md5sum list exists, download all files and log md5sums
-			echo "$line" >> updates.txt
-		fi
-	done < index.txt
+	comm -2 -3 index.txt local_index.txt > updates.txt
 
 	# sum up total size of updates
 	TOTAL_SIZE=0
@@ -179,10 +156,7 @@ if [ "$do_update" = true ] ; then
 
 		if [ -f local_index.txt ]; then
 			#remove old local_index entry
-			sed -i "\#${LOCAL_FILENAME}.*#,+1 d" local_index.txt
-
-			#also remove blank lines
-			sed -i '/^\s*$/d' local_index.txt
+			sed -i "\#^${LOCAL_FILENAME}#d" local_index.txt
 		fi
 
 		#do download
@@ -210,6 +184,8 @@ if [ "$do_update" = true ] ; then
 	# cleanup
 	rm updates.txt
 	rm index.txt
+	sed -i '/^\s*$/d' local_index.txt
+	sort -o local_index.txt local_index.txt
 
 	# run warframe internal updater
 	$WINE "$WARFRAME_EXE" -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate
