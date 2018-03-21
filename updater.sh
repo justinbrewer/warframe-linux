@@ -26,6 +26,9 @@ WARFRAME_EXE="$EXEPREFIX/Warframe.x64.exe"
 #this is temporary until we can find out why both exes are getting corrupted and not launchable after closing
 [ -f local_index.txt ] && sed -i "\#^/Warframe\(\.x64\)*\.exe.*#d" local_index.txt
 
+# Temporary for compatibility with old installations
+[ -f local_index.txt ] && sed -i 's/\r$//' local_index.txt && sort -o local_index.txt local_index.txt
+
 function print_synopsis {
 	echo "$0 [options]"
 	echo ""
