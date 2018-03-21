@@ -88,16 +88,11 @@ fi
 # update game files
 #############################################################
 if [ "$do_update" = true ] ; then
-	find "$EXEPREFIX" -name '*.lzma' -exec rm {} \;
-
 	curl -A Mozilla/5.0 http://origin.warframe.com/index.txt.lzma | unlzma - > index.txt
 
 	echo "*********************"
 	echo "Checking for updates."
 	echo "*********************"
-
-	#remove old downloaded archives
-	find "$EXEPREFIX" -name '*.lzma' -exec rm {} \;
 
 	#create list of all files to download
 	rm -f updates.txt
