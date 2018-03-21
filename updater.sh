@@ -90,11 +90,7 @@ fi
 if [ "$do_update" = true ] ; then
 	find "$EXEPREFIX" -name '*.lzma' -exec rm {} \;
 
-	#keep wget as a backup in case curl fails
-	#wget -qN http://origin.warframe.com/index.txt.lzma
-	curl -A Mozilla/5.0 -s http://origin.warframe.com/index.txt.lzma -o index.txt.lzma
-	unlzma -f index.txt.lzma
-
+	curl -A Mozilla/5.0 http://origin.warframe.com/index.txt.lzma | unlzma - > index.txt
 
 	echo "*********************"
 	echo "Checking for updates."
@@ -218,7 +214,7 @@ if [ "$do_update" = true ] ; then
 
 	# cleanup
 	rm updates.txt
-	rm index.*
+	rm index.txt
 
 	# run warframe internal updater
 	$WINE "$WARFRAME_EXE" -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate
