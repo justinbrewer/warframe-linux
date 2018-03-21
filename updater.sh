@@ -24,7 +24,7 @@ export WINEPREFIX
 WARFRAME_EXE="$EXEPREFIX/Warframe.x64.exe"
 
 #this is temporary until we can find out why both exes are getting corrupted and not launchable after closing
-find "$EXEPREFIX" -name 'Warframe.*' -exec rm {} \;
+[ -f local_index.txt ] && sed -i "\#^/Warframe\(\.x64\)*\.exe.*#d" local_index.txt
 
 function print_synopsis {
 	echo "$0 [options]"
@@ -119,10 +119,6 @@ if [ "$do_update" = true ] ; then
 		RAW_FILENAME=$(echo $line | awk -F, '{print $1}')
 		#get the remote size of the lzma file when downloading
 		REMOTE_SIZE=$(echo $line | awk -F, '{print $2}' | sed 's/\r//')
-		#get the md5 sum from the current line
-		MD5SUM=${RAW_FILENAME: -37:-5}
-		#convert it to lower case
-		MD5SUM=${MD5SUM,,}
 		#path to local file currently tested
 		LOCAL_FILENAME="${RAW_FILENAME:0:-38}"
 		LOCAL_PATH="$EXEPREFIX${LOCAL_FILENAME}"
@@ -133,43 +129,17 @@ if [ "$do_update" = true ] ; then
 		#path to downloaded and extracted file
 		EXTRACTED_PATH="$EXEPREFIX${RAW_FILENAME:0:-5}"
 
-		#variable to specify whether to download current file or not
-		do_update=true
-
-		if [ -f "$LOCAL_PATH" ]; then
-			#local file exists
-
-			#check md5sum of local file
-			OLDMD5SUM=$(md5sum "$LOCAL_PATH" | awk '{print $1}')
-
-			if [ "$OLDMD5SUM" = "$MD5SUM" ]; then
-				#nothing to do
-				do_update=false
-			else
-				#md5sum mismatch, download new file
-				do_update=true
-			fi
-		else
-			# local file does not exist
-			do_update=true
-		fi
-
 		if [ -f local_index.txt ]; then
 			#remove old local_index entry
 			sed -i "\#^${LOCAL_FILENAME}#d" local_index.txt
 		fi
 
-		#do download
-		if [ "$do_update" = true ]; then
-			#show progress percentage for each downloading file
-			echo "Total update progress: $PERCENT% Downloading: ${RAW_FILENAME:0:-38}"
+		#show progress percentage for each downloading file
+		echo "Total update progress: $PERCENT% Downloading: ${RAW_FILENAME:0:-38}"
 
-			#download file and replace old file
-			#keep wget as a backup in case curl fails
-			#wget -x -O "$EXEPREFIX$line" http://content.warframe.com$line
-			mkdir -p "$(dirname "$LOCAL_PATH")"
-			curl -A Mozilla/5.0 $DOWNLOAD_URL | unlzma - > "$LOCAL_PATH"
-		fi
+		#download file and replace old file
+		mkdir -p "$(dirname "$LOCAL_PATH")"
+		curl -A Mozilla/5.0 $DOWNLOAD_URL | unlzma - > "$LOCAL_PATH"
 
 		#update local index
 		echo "$line" >> local_index.txt
