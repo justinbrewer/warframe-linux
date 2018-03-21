@@ -124,10 +124,6 @@ if [ "$do_update" = true ] ; then
 		LOCAL_PATH="$EXEPREFIX${LOCAL_FILENAME}"
 		#URL where to download the latest file
 		DOWNLOAD_URL="http://content.warframe.com$RAW_FILENAME"
-		#path to local file to be downloaded
-		LZMA_PATH="$EXEPREFIX${RAW_FILENAME}"
-		#path to downloaded and extracted file
-		EXTRACTED_PATH="$EXEPREFIX${RAW_FILENAME:0:-5}"
 
 		if [ -f local_index.txt ]; then
 			#remove old local_index entry
