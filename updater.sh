@@ -88,8 +88,8 @@ fi
 # update game files
 #############################################################
 if [ "$do_update" = true ] ; then
-	curl -A Mozilla/5.0 http://origin.warframe.com/index.txt.lzma | unlzma - > index.txt
-	sort -o index.txt index.txt
+	curl -A Mozilla/5.0 http://origin.warframe.com/index.txt.lzma | unlzma - \
+	    | sed 's/\r$//' | sort > index.txt
 	touch local_index.txt
 
 	echo "*********************"
@@ -103,7 +103,7 @@ if [ "$do_update" = true ] ; then
 	TOTAL_SIZE=0
 	while read -r line; do
 		# get the remote size of the lzma file when downloading
-		REMOTE_SIZE=$(echo $line | awk -F, '{print $2}' | sed 's/\r//')
+		REMOTE_SIZE=$(echo $line | awk -F, '{print $2}')
 		(( TOTAL_SIZE+=$REMOTE_SIZE ))
 	done < updates.txt
 
@@ -118,7 +118,7 @@ if [ "$do_update" = true ] ; then
 		#get the raw filename with md5sum and lzma extension
 		RAW_FILENAME=$(echo $line | awk -F, '{print $1}')
 		#get the remote size of the lzma file when downloading
-		REMOTE_SIZE=$(echo $line | awk -F, '{print $2}' | sed 's/\r//')
+		REMOTE_SIZE=$(echo $line | awk -F, '{print $2}')
 		#path to local file currently tested
 		LOCAL_FILENAME="${RAW_FILENAME:0:-38}"
 		LOCAL_PATH="$EXEPREFIX${LOCAL_FILENAME}"
