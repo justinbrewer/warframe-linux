@@ -9,7 +9,7 @@ fi
 
 EXEPREFIX="$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
 
-WINECMD=${WINE-wine}
+WINECMD=${WINE-wine64}
 
 # determine wich Warframe exe to run
 #if [ "$WINEARCH" = "win64" ]; then
