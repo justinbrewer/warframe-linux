@@ -89,7 +89,7 @@ if [ "$do_update" = true ] ; then
 
 	#keep wget as a backup in case curl fails
 	#wget -qN http://origin.warframe.com/index.txt.lzma
-	curl -s http://origin.warframe.com/index.txt.lzma -o index.txt.lzma
+	curl -A Mozilla/5.0 -s http://origin.warframe.com/index.txt.lzma -o index.txt.lzma
 	unlzma -f index.txt.lzma
 
 
@@ -200,7 +200,7 @@ if [ "$do_update" = true ] ; then
 			#keep wget as a backup in case curl fails
 			#wget -x -O "$EXEPREFIX$line" http://content.warframe.com$line
 			mkdir -p "$(dirname "$LOCAL_PATH")"
-			curl $DOWNLOAD_URL | unlzma - > "$LOCAL_PATH"
+			curl -A Mozilla/5.0 $DOWNLOAD_URL | unlzma - > "$LOCAL_PATH"
 		fi
 
 		#update local index
