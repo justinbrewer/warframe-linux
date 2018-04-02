@@ -7,7 +7,7 @@ echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
 echo "*************************************************"
 
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 devenum xact xinput quartz win7
+WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 vcrun2013 devenum xact xinput quartz win7
 
 echo "*************************************************"
 echo "Creating warframe directories."
@@ -29,7 +29,7 @@ echo "*************************************************"
 echo "Applying warframe wine prefix registry settings."
 echo "*************************************************"
 sed -i "s/%USERNAME%/"$USER"/g" wf.reg
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine regedit /S wf.reg
+WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine64 regedit /S wf.reg
 
 
 echo "*************************************************"
