@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change to your preferred installation directory
-GAMEDIR="/home/${USER}/Warframe"
+GAMEDIR="/home/${USER}/Games/Warframe"
 
 echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
