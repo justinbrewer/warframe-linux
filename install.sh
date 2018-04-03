@@ -31,6 +31,14 @@ echo "*************************************************"
 sed -i "s/%USERNAME%/"$USER"/g" wf.reg
 WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine64 regedit /S wf.reg
 
+echo "*************************************************"
+echo "Installing Direct X."
+echo "*************************************************"
+wget https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe
+WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine64 directx_Jun2010_redist.exe /Q /T:C:\dx9
+WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine64 dx9/dx9/DXSETUP.EXE /silent
+rm -R dx9
+
 
 echo "*************************************************"
 echo "The next few steps will prompt you for shortcut creations. If root is required, please enter your root password when prompted."
