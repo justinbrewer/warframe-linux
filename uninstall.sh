@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change to your preferred installation directory
-GAMEDIR="/home/${USER}/Warframe"
+GAMEDIR="${HOME}/Warframe"
 
 echo "*************************************************"
 echo "The next few steps will remove all shortcuts and warframe files."
@@ -24,12 +24,12 @@ echo "*************************************************"
 sudo rm -R /usr/share/applications/warframe.desktop 
 
 echo "*************************************************"
-echo "Removing sudo rm -R /home/$USER/Desktop/warframe.desktop"
+echo "Removing $HOME/Desktop/warframe.desktop"
 echo "*************************************************"
-sudo rm -R /home/$USER/Desktop/warframe.desktop
+sudo rm -R $HOME/Desktop/warframe.desktop
 
 echo "*************************************************"
-echo "Removing home/$USER/Warframe"
+echo "Removing $GAMEDIR"
 echo "*************************************************"
 sudo rm -R $GAMEDIR
 

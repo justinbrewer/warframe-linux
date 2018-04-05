@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change to your preferred installation directory
-GAMEDIR="/home/${USER}/Games/Warframe"
+GAMEDIR="${HOME}/Games/Warframe"
 
 echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
@@ -94,7 +94,7 @@ then
 	echo "*************************************************"
 	echo "Creating warframe desktop shortcut."
 	echo "*************************************************"
-	cp /usr/share/applications/warframe.desktop /home/$USER/Desktop/
+	cp /usr/share/applications/warframe.desktop ${HOME}/Desktop/
 fi
 
 
