@@ -3,11 +3,16 @@
 # Change to your preferred installation directory
 GAMEDIR="${HOME}/Games/Warframe"
 
+WINE=${WINE:-wine64}
+export WINEARCH=${WINEARCH:-win64}
+export WINEDEBUG=${WINEDEBUG:--all}
+export WINEPREFIX=$GAMEDIR
+
 echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
 echo "*************************************************"
 
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 vcrun2013 devenum xact xinput quartz win7
+winetricks -q vcrun2015 vcrun2013 devenum xact xinput quartz win7
 
 echo "*************************************************"
 echo "Creating warframe directories."
@@ -29,14 +34,14 @@ echo "*************************************************"
 echo "Applying warframe wine prefix registry settings."
 echo "*************************************************"
 sed -i "s/%USERNAME%/"$USER"/g" wf.reg
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine64 regedit /S wf.reg
+$WINE regedit /S wf.reg
 
 echo "*************************************************"
 echo "Installing Direct X."
 echo "*************************************************"
 wget https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine64 directx_Jun2010_redist.exe /Q /T:C:\dx9
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine64 dx9/dx9/DXSETUP.EXE /silent
+$WINE directx_Jun2010_redist.exe /Q /T:C:\dx9
+$WINE dx9/dx9/DXSETUP.EXE /silent
 rm -R dx9
 
 
@@ -55,8 +60,13 @@ export PULSE_LATENCY_MSEC=60
 export __GL_THREADED_OPTIMIZATIONS=1
 export MESA_GLTHREAD=TRUE
 
+export WINE=$WINE
+export WINEARCH=$WINEARCH
+export WINEDEBUG=$WINEDEBUG
+export WINEPREFIX=$WINEPREFIX
+
 cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/
-WINEARCH=win64 WINEPREFIX=$GAMEDIR WINEDEBUG=-all bash updater.sh
+exec ./updater.sh
 EOF
 
 chmod a+x warframe.sh

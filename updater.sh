@@ -9,7 +9,10 @@ fi
 
 EXEPREFIX="$WINEPREFIX/drive_c/Program Files/Warframe/Downloaded/Public"
 
-WINECMD=${WINE-wine64}
+WINE=${WINE:-wine64}
+export WINEARCH=${WINEARCH:-win64}
+export WINEDEBUG=${WINEDEBUG:--all}
+export WINEPREFIX
 
 # determine wich Warframe exe to run
 #if [ "$WINEARCH" = "win64" ]; then
@@ -218,7 +221,7 @@ if [ "$do_update" = true ] ; then
 	rm index.*
 
 	# run warframe internal updater
-	$WINECMD "$WARFRAME_EXE" -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate
+	$WINE "$WARFRAME_EXE" -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate
 fi
 
 
@@ -229,7 +232,7 @@ if [ "$do_cache" = true ] ; then
 	echo "*********************"
 	echo "Optimizing Cache."
 	echo "*********************"
-	$WINECMD "$WARFRAME_EXE"  -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt
+	$WINE "$WARFRAME_EXE"  -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt
 fi
 
 
@@ -242,5 +245,5 @@ if [ "$start_game" = true ] ; then
 	echo "Launching Warframe."
 	echo "*********************"
 
-	$WINECMD "$WARFRAME_EXE" -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0
+	$WINE "$WARFRAME_EXE" -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0
 fi
