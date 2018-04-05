@@ -48,15 +48,16 @@ echo "*************************************************"
 echo "Creating warframe shell script"
 echo "*************************************************"
 
-echo "#!/bin/bash" > warframe.sh
+cat > warframe.sh <<EOF
+#!/bin/bash
 
-echo "export PULSE_LATENCY_MSEC=60" >> warframe.sh
-echo "export __GL_THREADED_OPTIMIZATIONS=1" >> warframe.sh
-echo "export MESA_GLTHREAD=TRUE" >> warframe.sh
+export PULSE_LATENCY_MSEC=60
+export __GL_THREADED_OPTIMIZATIONS=1
+export MESA_GLTHREAD=TRUE
 
-
-echo "cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/" >> warframe.sh
-echo "WINEARCH=win64 WINEPREFIX=$GAMEDIR WINEDEBUG=-all bash updater.sh" >> warframe.sh
+cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/
+WINEARCH=win64 WINEPREFIX=$GAMEDIR WINEDEBUG=-all bash updater.sh
+EOF
 
 chmod a+x warframe.sh
 sudo cp ${GAMEDIR}/drive_c/Program\ Files/Warframe/warframe.sh /usr/bin/warframe
@@ -73,16 +74,18 @@ then
 
 	sudo cp warframe.png /usr/share/pixmaps/
 
-	echo "[Desktop Entry]" > warframe.desktop
-	echo "Encoding=UTF-8" >> warframe.desktop
-	echo "Name=Warframe" >> warframe.desktop
-	echo "GenericName=Warframe" >> warframe.desktop
-	echo "Exec=/usr/bin/warframe \"\$@\"" >> warframe.desktop
-	echo "Icon=/usr/share/pixmaps/warframe.png" >> warframe.desktop
-	echo "StartupNotify=true" >> warframe.desktop
-	echo "Terminal=false" >> warframe.desktop
-	echo "Type=Application" >> warframe.desktop
-	echo "Categories=Application;Game" >> warframe.desktop
+	cat > warframe.desktop <<EOF
+[Desktop Entry]
+Encoding=UTF-8
+Name=Warframe
+GenericName=Warframe
+Exec=/usr/bin/warframe "\$@"
+Icon=/usr/share/pixmaps/warframe.png
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Application;Game
+EOF
 
 	sudo cp warframe.desktop /usr/share/applications/
 fi
