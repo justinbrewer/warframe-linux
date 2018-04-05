@@ -66,7 +66,7 @@ export WINEDEBUG=$WINEDEBUG
 export WINEPREFIX=$WINEPREFIX
 
 cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/
-exec ./updater.sh
+exec ./updater.sh "\$@"
 EOF
 
 chmod a+x warframe.sh
