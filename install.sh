@@ -106,8 +106,14 @@ exec ./updater.sh "\$@"
 EOF
 
 chmod a+x warframe.sh
-sudo cp ${GAMEDIR}/drive_c/Program\ Files/Warframe/warframe.sh /usr/bin/warframe
 
+read -p "Would you like to add warframe to the default path? y/n" -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+	sudo cp ${GAMEDIR}/drive_c/Program\ Files/Warframe/warframe.sh /usr/bin/warframe
+fi
+
+popd &>/dev/null
 
 read -p "Would you like a menu shortcut? y/n" -n 1 -r
 echo    # (optional) move to a new line
