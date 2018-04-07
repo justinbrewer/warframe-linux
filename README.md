@@ -24,6 +24,9 @@ Option B: Without Lutris:
   ./install.sh
 ```
 
+An optional parameter may be passed to specify the target installation
+directory. Run `./install.sh --help` to see all available options.
+
 4. Launch the game via any of the following methods:  
 
 ```

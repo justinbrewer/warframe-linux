@@ -1,7 +1,31 @@
 #!/bin/bash
 
-# Change to your preferred installation directory
-GAMEDIR="${HOME}/Games/Warframe"
+function usage() {
+    cat <<EOF
+usage: ./install.sh [-h|--help] [game-dir]
+
+    game-dir  - Path to install. Defaults to '\$HOME/Games/Warframe'
+    -h --help - Display this help message
+
+Environment Variables:
+
+The following environment variables will be preserved when later running the game:
+
+    WINE      - Path to custom Wine executable. Defaults to 'wine64'
+    WINEARCH  - Override Wine execution architecture. Currently, only 'win64' is supported.
+    WINEDEBUG - Wine debugging settings. Defaults to '-all', all messages off.
+
+EOF
+}
+
+if [ $# -gt 0 ]; then
+    if [ $1 = "--help" ] || [ $1 = "-h" ]; then
+	usage
+	exit 0
+    fi
+fi
+
+GAMEDIR=${1:-${HOME}/Games/Warframe}
 
 WINE=${WINE:-wine64}
 export WINEARCH=${WINEARCH:-win64}
@@ -12,6 +36,7 @@ echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
 echo "*************************************************"
 
+mkdir -p $GAMEDIR
 winetricks -q vcrun2015 vcrun2013 devenum xact xinput quartz win7
 
 echo "*************************************************"
