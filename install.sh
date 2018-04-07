@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 function usage() {
     cat <<EOF
@@ -106,6 +106,9 @@ exec ./updater.sh "\$@"
 EOF
 
 chmod a+x warframe.sh
+
+# Errors are now tolerable
+set +e
 
 read -p "Would you like to add warframe to the default path? y/n" -n 1 -r
 echo
