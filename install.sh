@@ -19,26 +19,26 @@ EOF
 }
 
 if [ $# -gt 0 ]; then
-    if [ $1 = "--help" ] || [ $1 = "-h" ]; then
+    if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
 	usage
 	exit 0
     fi
 fi
 
-GAMEDIR=${1:-${HOME}/Games/Warframe}
+GAMEDIR="${1:-${HOME}/Games/Warframe}"
 
-WFDIR=$GAMEDIR/drive_c/Program\ Files/Warframe
+WFDIR="$GAMEDIR/drive_c/Program Files/Warframe"
 
 WINE=${WINE:-wine64}
 export WINEARCH=${WINEARCH:-win64}
 export WINEDEBUG=${WINEDEBUG:--all}
-export WINEPREFIX=$GAMEDIR
+export WINEPREFIX="$GAMEDIR"
 
 echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
 echo "*************************************************"
 
-mkdir -p $GAMEDIR
+mkdir -p "$GAMEDIR"
 winetricks -q vcrun2015 vcrun2013 devenum xact xinput quartz win7
 
 echo "*************************************************"
@@ -50,12 +50,12 @@ echo "*************************************************"
 echo "Creating warframe directories."
 echo "*************************************************"
 mkdir -p "$WFDIR"
-mkdir -p ${GAMEDIR}/drive_c/users/${USER}/Local\ Settings/Application\ Data/Warframe
+mkdir -p "${GAMEDIR}/drive_c/users/${USER}/Local Settings/Application Data/Warframe"
 
 echo "*************************************************"
 echo "Copying warframe files."
 echo "*************************************************"
-cp EE.cfg ${GAMEDIR}/drive_c/users/${USER}/Local\ Settings/Application\ Data/Warframe/EE.cfg
+cp EE.cfg "${GAMEDIR}/drive_c/users/${USER}/Local Settings/Application Data/Warframe/EE.cfg"
 
 cp -R updater.sh README.md "$WFDIR"
 
@@ -65,8 +65,8 @@ cat > uninstall.sh <<EOF
 #!/bin/bash
 
 sudo rm -R /usr/bin/warframe
-rm -R \$HOME/Desktop/warframe.desktop $GAMEDIR \\
-      \$HOME/.local/share/applications/warframe.desktop
+rm -R "\$HOME/Desktop/warframe.desktop" "$GAMEDIR" \\
+      "\$HOME/.local/share/applications/warframe.desktop"
 echo "Warframe has been successfully removed."
 EOF
 
@@ -96,7 +96,7 @@ export MESA_GLTHREAD=TRUE
 export WINE=$WINE
 export WINEARCH=$WINEARCH
 export WINEDEBUG=$WINEDEBUG
-export WINEPREFIX=$WINEPREFIX
+export WINEPREFIX="$WINEPREFIX"
 
 cd "$WFDIR"
 exec ./updater.sh "\$@"
@@ -143,7 +143,7 @@ then
 	echo "Creating warframe application menu shortcut."
 	echo "*************************************************"
 	cp warframe.png "$WFDIR"
-	mkdesktop > $HOME/.local/share/applications/warframe.desktop
+	mkdesktop > "$HOME/.local/share/applications/warframe.desktop"
 fi
 
 read -p "Would you like a desktop shortcut? y/n" -n 1 -r
@@ -154,7 +154,7 @@ then
 	echo "Creating warframe desktop shortcut."
 	echo "*************************************************"
 	cp warframe.png "$WFDIR"
-	mkdesktop > ${HOME}/Desktop/warframe.desktop
+	mkdesktop > "${HOME}/Desktop/warframe.desktop"
 fi
 
 
