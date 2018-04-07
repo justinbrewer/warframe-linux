@@ -64,9 +64,9 @@ pushd "$WFDIR"
 cat > uninstall.sh <<EOF
 #!/bin/bash
 
-sudo rm -R /usr/bin/warframe /usr/share/pixmaps/warframe.png \\
-           /usr/share/applications/warframe.desktop
-rm -R \$HOME/Desktop/warframe.desktop $GAMEDIR
+sudo rm -R /usr/bin/warframe
+rm -R \$HOME/Desktop/warframe.desktop $GAMEDIR \\
+      \$HOME/.local/share/applications/warframe.desktop
 echo "Warframe has been successfully removed."
 EOF
 
@@ -81,10 +81,6 @@ $WINE directx_Jun2010_redist.exe /Q /T:C:\dx9
 $WINE dx9/dx9/DXSETUP.EXE /silent
 rm -R dx9
 
-
-echo "*************************************************"
-echo "The next few steps will prompt you for shortcut creations. If root is required, please enter your root password when prompted."
-echo "*************************************************"
 
 echo "*************************************************"
 echo "Creating warframe shell script"
@@ -111,6 +107,10 @@ chmod a+x warframe.sh
 # Errors are now tolerable
 set +e
 
+echo "*************************************************"
+echo "The next few steps will prompt you for shortcut creations. If root is required, please enter your root password when prompted."
+echo "*************************************************"
+
 read -p "Would you like to add warframe to the default path? y/n" -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -118,6 +118,21 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 popd &>/dev/null
+
+function mkdesktop() {
+	cat <<EOF
+[Desktop Entry]
+Encoding=UTF-8
+Name=Warframe
+GenericName=Warframe
+Exec="$WFDIR/warframe.sh" "\$@"
+Icon="$WFDIR/warframe.png"
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Application;Game
+EOF
+}
 
 read -p "Would you like a menu shortcut? y/n" -n 1 -r
 echo    # (optional) move to a new line
@@ -127,23 +142,8 @@ then
 	echo "*************************************************"
 	echo "Creating warframe application menu shortcut."
 	echo "*************************************************"
-
-	sudo cp warframe.png /usr/share/pixmaps/
-
-	cat > warframe.desktop <<EOF
-[Desktop Entry]
-Encoding=UTF-8
-Name=Warframe
-GenericName=Warframe
-Exec=/usr/bin/warframe "\$@"
-Icon=/usr/share/pixmaps/warframe.png
-StartupNotify=true
-Terminal=false
-Type=Application
-Categories=Application;Game
-EOF
-
-	sudo cp warframe.desktop /usr/share/applications/
+	cp warframe.png "$WFDIR"
+	mkdesktop > $HOME/.local/share/applications/warframe.desktop
 fi
 
 read -p "Would you like a desktop shortcut? y/n" -n 1 -r
@@ -153,7 +153,8 @@ then
 	echo "*************************************************"
 	echo "Creating warframe desktop shortcut."
 	echo "*************************************************"
-	cp /usr/share/applications/warframe.desktop ${HOME}/Desktop/
+	cp warframe.png "$WFDIR"
+	mkdesktop > ${HOME}/Desktop/warframe.desktop
 fi
 
 
