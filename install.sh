@@ -1,66 +1,138 @@
-#!/bin/bash
+#!/bin/bash -e
 
-# Change to your preferred installation directory
-GAMEDIR="/home/${USER}/Games/Warframe"
+function usage() {
+    cat <<EOF
+usage: ./install.sh [-h|--help] [game-dir]
+
+    game-dir  - Path to install. Defaults to '\$HOME/Games/Warframe'
+    -h --help - Display this help message
+
+Environment Variables:
+
+The following environment variables will be preserved when later running the game:
+
+    WINE      - Path to custom Wine executable. Defaults to 'wine64'
+    WINEARCH  - Override Wine execution architecture. Currently, only 'win64' is supported.
+    WINEDEBUG - Wine debugging settings. Defaults to '-all', all messages off.
+
+EOF
+}
+
+if [ $# -gt 0 ]; then
+    if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+	usage
+	exit 0
+    fi
+fi
+
+GAMEDIR="${1:-${HOME}/Games/Warframe}"
+
+WFDIR="$GAMEDIR/drive_c/Program Files/Warframe"
+
+WINE=${WINE:-wine64}
+export WINEARCH=${WINEARCH:-win64}
+export WINEDEBUG=${WINEDEBUG:--all}
+export WINEPREFIX="$GAMEDIR"
 
 echo "*************************************************"
 echo "Creating wine prefix and performing winetricks."
 echo "*************************************************"
 
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR winetricks -q vcrun2015 vcrun2013 devenum xact xinput quartz win7
-
-echo "*************************************************"
-echo "Creating warframe directories."
-echo "*************************************************"
-mkdir -p ${GAMEDIR}/drive_c/Program\ Files/Warframe/
-mkdir -p ${GAMEDIR}/drive_c/users/${USER}/Local\ Settings/Application\ Data/Warframe
-
-echo "*************************************************"
-echo "Copying warframe files."
-echo "*************************************************"
-cp -R * ${GAMEDIR}/drive_c/Program\ Files/Warframe/ 
-
-cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/
-chmod a+x updater.exe
-chmod a+x updater.sh
-mv EE.cfg ${GAMEDIR}/drive_c/users/${USER}/Local\ Settings/Application\ Data/Warframe/EE.cfg
+mkdir -p "$GAMEDIR"
+winetricks -q vcrun2015 vcrun2013 devenum xact xinput quartz win7
 
 echo "*************************************************"
 echo "Applying warframe wine prefix registry settings."
 echo "*************************************************"
-sed -i "s/%USERNAME%/"$USER"/g" wf.reg
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine64 regedit /S wf.reg
+$WINE regedit /S wf.reg
+
+echo "*************************************************"
+echo "Creating warframe directories."
+echo "*************************************************"
+mkdir -p "$WFDIR"
+mkdir -p "${GAMEDIR}/drive_c/users/${USER}/Local Settings/Application Data/Warframe"
+
+echo "*************************************************"
+echo "Copying warframe files."
+echo "*************************************************"
+cp EE.cfg "${GAMEDIR}/drive_c/users/${USER}/Local Settings/Application Data/Warframe/EE.cfg"
+
+cp -R updater.sh README.md "$WFDIR"
+
+pushd "$WFDIR"
+
+cat > uninstall.sh <<EOF
+#!/bin/bash
+
+sudo rm -R /usr/bin/warframe
+rm -R "\$HOME/Desktop/warframe.desktop" "$GAMEDIR" \\
+      "\$HOME/.local/share/applications/warframe.desktop"
+echo "Warframe has been successfully removed."
+EOF
+
+chmod a+x updater.sh
+chmod a+x uninstall.sh
 
 echo "*************************************************"
 echo "Installing Direct X."
 echo "*************************************************"
 wget https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine64 directx_Jun2010_redist.exe /Q /T:C:\dx9
-WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$GAMEDIR wine64 dx9/dx9/DXSETUP.EXE /silent
+$WINE directx_Jun2010_redist.exe /Q /T:C:\dx9
+$WINE dx9/dx9/DXSETUP.EXE /silent
 rm -R dx9
 
-
-echo "*************************************************"
-echo "The next few steps will prompt you for shortcut creations. If root is required, please enter your root password when prompted."
-echo "*************************************************"
 
 echo "*************************************************"
 echo "Creating warframe shell script"
 echo "*************************************************"
 
-echo "#!/bin/bash" > warframe.sh
+cat > warframe.sh <<EOF
+#!/bin/bash
 
-echo "export PULSE_LATENCY_MSEC=60" >> warframe.sh
-echo "export __GL_THREADED_OPTIMIZATIONS=1" >> warframe.sh
-echo "export MESA_GLTHREAD=TRUE" >> warframe.sh
+export PULSE_LATENCY_MSEC=60
+export __GL_THREADED_OPTIMIZATIONS=1
+export MESA_GLTHREAD=TRUE
 
+export WINE=$WINE
+export WINEARCH=$WINEARCH
+export WINEDEBUG=$WINEDEBUG
+export WINEPREFIX="$WINEPREFIX"
 
-echo "cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/" >> warframe.sh
-echo "WINEARCH=win64 WINEPREFIX=$GAMEDIR WINEDEBUG=-all bash updater.sh" >> warframe.sh
+cd "$WFDIR"
+exec ./updater.sh "\$@"
+EOF
 
 chmod a+x warframe.sh
-sudo cp ${GAMEDIR}/drive_c/Program\ Files/Warframe/warframe.sh /usr/bin/warframe
 
+# Errors are now tolerable
+set +e
+
+echo "*************************************************"
+echo "The next few steps will prompt you for shortcut creations. If root is required, please enter your root password when prompted."
+echo "*************************************************"
+
+read -p "Would you like to add warframe to the default path? y/n" -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+	sudo cp "$WFDIR/warframe.sh" /usr/bin/warframe
+fi
+
+popd &>/dev/null
+
+function mkdesktop() {
+	cat <<EOF
+[Desktop Entry]
+Encoding=UTF-8
+Name=Warframe
+GenericName=Warframe
+Exec="$WFDIR/warframe.sh" "\$@"
+Icon="$WFDIR/warframe.png"
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Application;Game
+EOF
+}
 
 read -p "Would you like a menu shortcut? y/n" -n 1 -r
 echo    # (optional) move to a new line
@@ -70,21 +142,8 @@ then
 	echo "*************************************************"
 	echo "Creating warframe application menu shortcut."
 	echo "*************************************************"
-
-	sudo cp warframe.png /usr/share/pixmaps/
-
-	echo "[Desktop Entry]" > warframe.desktop
-	echo "Encoding=UTF-8" >> warframe.desktop
-	echo "Name=Warframe" >> warframe.desktop
-	echo "GenericName=Warframe" >> warframe.desktop
-	echo "Exec=/usr/bin/warframe \"\$@\"" >> warframe.desktop
-	echo "Icon=/usr/share/pixmaps/warframe.png" >> warframe.desktop
-	echo "StartupNotify=true" >> warframe.desktop
-	echo "Terminal=false" >> warframe.desktop
-	echo "Type=Application" >> warframe.desktop
-	echo "Categories=Application;Game" >> warframe.desktop
-
-	sudo cp warframe.desktop /usr/share/applications/
+	cp warframe.png "$WFDIR"
+	mkdesktop > "$HOME/.local/share/applications/warframe.desktop"
 fi
 
 read -p "Would you like a desktop shortcut? y/n" -n 1 -r
@@ -94,7 +153,8 @@ then
 	echo "*************************************************"
 	echo "Creating warframe desktop shortcut."
 	echo "*************************************************"
-	cp /usr/share/applications/warframe.desktop /home/$USER/Desktop/
+	cp warframe.png "$WFDIR"
+	mkdesktop > "${HOME}/Desktop/warframe.desktop"
 fi
 
 

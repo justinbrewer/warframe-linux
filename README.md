@@ -20,11 +20,12 @@ Option B: Without Lutris:
   chmod a+x install.sh
 ```
 
-## Optionally update the install directory in install.sh - if you do so, update uninstall.sh as well
-
 ```shell
   ./install.sh
 ```
+
+An optional parameter may be passed to specify the target installation
+directory. Run `./install.sh --help` to see all available options.
 
 4. Launch the game via any of the following methods:  
 
@@ -40,7 +41,6 @@ Option B: Without Lutris:
 This applies to non-lutris only: 
 
 ```shell
-  chmod a+x uninstall.sh
   ./uninstall.sh
 ```
 
