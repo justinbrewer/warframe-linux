@@ -27,6 +27,8 @@ fi
 
 GAMEDIR=${1:-${HOME}/Games/Warframe}
 
+WFDIR=$GAMEDIR/drive_c/Program\ Files/Warframe
+
 WINE=${WINE:-wine64}
 export WINEARCH=${WINEARCH:-win64}
 export WINEDEBUG=${WINEDEBUG:--all}
@@ -47,7 +49,7 @@ $WINE regedit /S wf.reg
 echo "*************************************************"
 echo "Creating warframe directories."
 echo "*************************************************"
-mkdir -p ${GAMEDIR}/drive_c/Program\ Files/Warframe/
+mkdir -p "$WFDIR"
 mkdir -p ${GAMEDIR}/drive_c/users/${USER}/Local\ Settings/Application\ Data/Warframe
 
 echo "*************************************************"
@@ -55,10 +57,9 @@ echo "Copying warframe files."
 echo "*************************************************"
 cp EE.cfg ${GAMEDIR}/drive_c/users/${USER}/Local\ Settings/Application\ Data/Warframe/EE.cfg
 
-cp -R updater.sh README.md \
-    ${GAMEDIR}/drive_c/Program\ Files/Warframe/
+cp -R updater.sh README.md "$WFDIR"
 
-pushd ${GAMEDIR}/drive_c/Program\ Files/Warframe/
+pushd "$WFDIR"
 
 cat > uninstall.sh <<EOF
 #!/bin/bash
@@ -101,7 +102,7 @@ export WINEARCH=$WINEARCH
 export WINEDEBUG=$WINEDEBUG
 export WINEPREFIX=$WINEPREFIX
 
-cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/
+cd "$WFDIR"
 exec ./updater.sh "\$@"
 EOF
 
@@ -113,7 +114,7 @@ set +e
 read -p "Would you like to add warframe to the default path? y/n" -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-	sudo cp ${GAMEDIR}/drive_c/Program\ Files/Warframe/warframe.sh /usr/bin/warframe
+	sudo cp "$WFDIR/warframe.sh" /usr/bin/warframe
 fi
 
 popd &>/dev/null
