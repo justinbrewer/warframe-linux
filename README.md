@@ -20,8 +20,6 @@ Option B: Without Lutris:
   chmod a+x install.sh
 ```
 
-## Optionally update the install directory in install.sh - if you do so, update uninstall.sh as well
-
 ```shell
   ./install.sh
 ```
@@ -40,7 +38,6 @@ Option B: Without Lutris:
 This applies to non-lutris only: 
 
 ```shell
-  chmod a+x uninstall.sh
   ./uninstall.sh
 ```
 

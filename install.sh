@@ -26,8 +26,19 @@ echo "*************************************************"
 cp -R * ${GAMEDIR}/drive_c/Program\ Files/Warframe/ 
 
 cd ${GAMEDIR}/drive_c/Program\ Files/Warframe/
+
+cat > uninstall.sh <<EOF
+#!/bin/bash
+
+sudo rm -R /usr/bin/warframe /usr/share/pixmaps/warframe.png \\
+           /usr/share/applications/warframe.desktop
+rm -R \$HOME/Desktop/warframe.desktop $GAMEDIR
+echo "Warframe has been successfully removed."
+EOF
+
 chmod a+x updater.exe
 chmod a+x updater.sh
+chmod a+x uninstall.sh
 mv EE.cfg ${GAMEDIR}/drive_c/users/${USER}/Local\ Settings/Application\ Data/Warframe/EE.cfg
 
 echo "*************************************************"
