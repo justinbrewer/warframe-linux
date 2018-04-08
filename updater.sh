@@ -13,6 +13,7 @@ WINE=${WINE:-wine64}
 export WINEARCH=${WINEARCH:-win64}
 export WINEDEBUG=${WINEDEBUG:--all}
 export WINEPREFIX
+export __PBA_GEO_HEAP=2048
 
 # determine wich Warframe exe to run
 #if [ "$WINEARCH" = "win64" ]; then
