@@ -134,6 +134,9 @@ Categories=Application;Game
 EOF
 }
 
+# Download warframe.png icon for creating shortcuts
+wget -O warframe.png http://i.imgur.com/lh5YKoc.png -q
+
 read -p "Would you like a menu shortcut? y/n" -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
