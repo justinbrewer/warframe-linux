@@ -23,11 +23,13 @@ export WINEPREFIX
 
 WARFRAME_EXE="$EXEPREFIX/Warframe.x64.exe"
 
+touch local_index.txt
+
 #this is temporary until we can find out why both exes are getting corrupted and not launchable after closing
-[ -f local_index.txt ] && sed -i "\#^/Warframe\(\.x64\)*\.exe.*#d" local_index.txt
+sed -i "\#^/Warframe\(\.x64\)*\.exe.*#d" local_index.txt
 
 # Temporary for compatibility with old installations
-[ -f local_index.txt ] && sed -i 's/\r$//' local_index.txt && sort -o local_index.txt local_index.txt
+sed -i 's/\r$//' local_index.txt && sort -o local_index.txt local_index.txt
 
 function print_synopsis {
 	echo "$0 [options]"
@@ -93,7 +95,6 @@ fi
 if [ "$do_update" = true ] ; then
 	curl -A Mozilla/5.0 http://origin.warframe.com/index.txt.lzma | unlzma - \
 	    | sed 's/\r$//' | sort > index.txt
-	touch local_index.txt
 
 	echo "*********************"
 	echo "Checking for updates."
@@ -128,10 +129,8 @@ if [ "$do_update" = true ] ; then
 		#URL where to download the latest file
 		DOWNLOAD_URL="http://content.warframe.com$RAW_FILENAME"
 
-		if [ -f local_index.txt ]; then
-			#remove old local_index entry
-			sed -i "\#^${LOCAL_FILENAME}#d" local_index.txt
-		fi
+		#remove old local_index entry
+		sed -i "\#^${LOCAL_FILENAME}#d" local_index.txt
 
 		#show progress percentage for each downloading file
 		echo "Total update progress: $PERCENT% Downloading: ${RAW_FILENAME:0:-38}"
