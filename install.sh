@@ -92,6 +92,7 @@ cat > warframe.sh <<EOF
 export PULSE_LATENCY_MSEC=60
 export __GL_THREADED_OPTIMIZATIONS=1
 export MESA_GLTHREAD=TRUE
+export __PBA_GEO_HEAP=2048
 
 export WINE=$WINE
 export WINEARCH=$WINEARCH
