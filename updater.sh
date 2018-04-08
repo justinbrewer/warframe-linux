@@ -13,7 +13,11 @@ WINE=${WINE:-wine64}
 export WINEARCH=${WINEARCH:-win64}
 export WINEDEBUG=${WINEDEBUG:--all}
 export WINEPREFIX
+
 export __PBA_GEO_HEAP=2048
+export PULSE_LATENCY_MSEC=60
+export __GL_THREADED_OPTIMIZATIONS=1
+export MESA_GLTHREAD=TRUE
 
 # determine wich Warframe exe to run
 #if [ "$WINEARCH" = "win64" ]; then
