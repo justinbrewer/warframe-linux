@@ -1,3 +1,4 @@
 #!/bin/bash
 
-bash updater.sh
+cd $WINEPREFIX/drive_c/Program\ Files/Warframe/
+xterm -e "./updater.sh $@"

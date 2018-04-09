@@ -1,6 +1,4 @@
 
 title Warframe Linux Game Launcher
 
-updater.exe
-
-
+cmd /C start /b /wait "" updater.exe

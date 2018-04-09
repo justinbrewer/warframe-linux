@@ -14,11 +14,6 @@ export WINEARCH=${WINEARCH:-win64}
 export WINEDEBUG=${WINEDEBUG:--all}
 export WINEPREFIX
 
-export __PBA_GEO_HEAP=2048
-export PULSE_LATENCY_MSEC=60
-export __GL_THREADED_OPTIMIZATIONS=1
-export MESA_GLTHREAD=TRUE
-
 # determine wich Warframe exe to run
 #if [ "$WINEARCH" = "win64" ]; then
 #	WARFRAME_EXE="$EXEPREFIX/Warframe.x64.exe"
@@ -26,7 +21,7 @@ export MESA_GLTHREAD=TRUE
 #	WARFRAME_EXE="$EXEPREFIX/Warframe.exe"
 #fi
 
-WARFRAME_EXE="$EXEPREFIX/Warframe.x64.exe"
+WARFRAME_EXE="Downloaded/Public/Warframe.exe"
 
 #this is temporary until we can find out why both exes are getting corrupted and not launchable after closing
 find "$EXEPREFIX" -name 'Warframe.*' -exec rm {} \;
@@ -226,7 +221,7 @@ if [ "$do_update" = true ] ; then
 	rm index.*
 
 	# run warframe internal updater
-	$WINE "$WARFRAME_EXE" -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate
+	$WINE cmd /C start /b /wait "" "$WARFRAME_EXE" -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate
 fi
 
 
@@ -237,7 +232,7 @@ if [ "$do_cache" = true ] ; then
 	echo "*********************"
 	echo "Optimizing Cache."
 	echo "*********************"
-	$WINE "$WARFRAME_EXE"  -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt
+	$WINE cmd /C start /b /wait "" "$WARFRAME_EXE"  -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt
 fi
 
 
@@ -250,5 +245,5 @@ if [ "$start_game" = true ] ; then
 	echo "Launching Warframe."
 	echo "*********************"
 
-	$WINE "$WARFRAME_EXE" -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0
+	$WINE cmd /C start /wait "" "$WARFRAME_EXE" -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0
 fi

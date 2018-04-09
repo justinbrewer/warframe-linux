@@ -100,7 +100,15 @@ export WINEDEBUG=$WINEDEBUG
 export WINEPREFIX="$WINEPREFIX"
 
 cd "$WFDIR"
-exec ./updater.sh "\$@"
+if [ ! -z "$@" ]; then
+    if [ "$@" = "-h" ] || [ "$@" = "--help" ]; then
+        xterm -hold -e "./updater.sh $@"
+    fi
+else
+    xterm -e "./updater.sh $@"
+fi
+
+
 EOF
 
 chmod a+x warframe.sh
