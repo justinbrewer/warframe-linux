@@ -1,5 +1,5 @@
 ## If you're getting crashes  
-Report them on winehq. Nothing on my launcher can fix what wine breaks. All this does is set up a prefix.  If you find a missing override or library, report it, but do not report crashes here without an answer.  
+Report them on winehq. Nothing on my launcher can fix what wine breaks. All this does is set up a prefix and update/download/launch the game.  If you find a missing override or library, report it, but do not report crashes here without an answer.  
 
 
 ## Installation Instructions
