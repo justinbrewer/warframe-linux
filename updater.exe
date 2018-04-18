@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd $WINEPREFIX/drive_c/Program\ Files/Warframe/
-xterm -e "./updater.sh $@"
+xterm -bg black -fg white -e "./updater.sh $@"

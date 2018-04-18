@@ -102,10 +102,10 @@ export WINEPREFIX="$WINEPREFIX"
 cd "$WFDIR"
 if [ ! -z "$@" ]; then
     if [ "$@" = "-h" ] || [ "$@" = "--help" ]; then
-        xterm -hold -e "./updater.sh $@"
+        xterm -bg black -fg white -hold -e "./updater.sh $@"
     fi
 else
-    xterm -e "./updater.sh $@"
+    xterm -bg black -fg white -e "./updater.sh $@"
 fi
 
 
