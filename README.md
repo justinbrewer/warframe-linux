@@ -39,7 +39,7 @@ directory. Run `./install.sh --help` to see all available options.
   type "warframe" in a terminal
 ```
 
-5. There will be a black box that comes up - this will update your warframe game. Let it run. When it finishes, the Launcher will run. Press play!  
+5. The launcher will open and run in an xterm terminal. It will then launch two "black boxes", one after another. This is Warframe.exe double checking for missed updates, and then optimizing the game cache. Once these launch they will close by themselves, and the game will launch, then the xterm window will close.  
 
 ## Uninstallation/Removal Instructions
 This applies to non-lutris only: 
