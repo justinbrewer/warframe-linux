@@ -30,7 +30,7 @@ function print_synopsis {
 	echo "options:"
 	echo "    --no-update         explicitly disable updating of warframe."
 	echo "    --no-cache          explicitly disable cache optimization of warframe cache files."
-	echo "    --no-launch         explicitly disable launching of warframe."
+	echo "    --no-game         explicitly disable launching of warframe."
 	echo "    -v, --verbose       print each executed command"
 	echo "    -h, --help          print this help message and quit"
 }
