@@ -64,7 +64,9 @@ pushd "$WFDIR"
 cat > uninstall.sh <<EOF
 #!/bin/bash
 
-sudo rm -R /usr/bin/warframe
+if [ -e /usr/bin/warframe ]; then
+	sudo rm -R /usr/bin/warframe
+fi
 rm -R "\$HOME/Desktop/warframe.desktop" "$GAMEDIR" \\
       "\$HOME/.local/share/applications/warframe.desktop"
 echo "Warframe has been successfully removed."
