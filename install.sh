@@ -128,7 +128,7 @@ function mkdesktop() {
 Encoding=UTF-8
 Name=Warframe
 GenericName=Warframe
-Exec="$WFDIR/warframe.sh" "\$@"
+Exec="$WFDIR/warframe.sh"
 Icon="$WFDIR/warframe.png"
 StartupNotify=true
 Terminal=false
